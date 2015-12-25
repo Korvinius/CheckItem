@@ -1,0 +1,13 @@
+debug: true
+anvil: true
+items: true
+frame: true
+drops: true
+armor: true
+place: true
+permission: true
+enchant:
+  check: true
+  level: 11
+  amount: 5
+  message: 'Это запрещенный предмет!'

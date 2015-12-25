@@ -1,0 +1,11 @@
+name: CheckItem
+main: net.wealth_mc.checkitem.CheckItem
+version: 2.0.1
+author: Korvinius
+description: Контроль над вещами
+website: http://wealth-mc.net                                                                                                                                                           
+commands:
+   checkitem:
+      aliases: [chi,check]
+      description:                                                                                                                                                                                                                                                                                                                             
+      usage: /checkitem help  
