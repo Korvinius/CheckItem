@@ -30,7 +30,7 @@ public class CheckEnchant {
 				result = true;
 				ItemStack itemair = new ItemStack(Material.AIR);
 				event.setCancelled(result);
-				player.setItemInHand(itemair);
+				player.getInventory().setItemInHand(itemair);
 				player.sendMessage(CheckItem.enchantmess);
 				logs = player.getName() + ": " + event.getEventName()
 						+ ": " + hand.toString();
@@ -72,7 +72,7 @@ public class CheckEnchant {
 		if (!(damager.getDamager() instanceof Player)) return result;
 		Player player = (Player) damager.getDamager();
 		if (CheckItem.permcheck) if (player.hasPermission("checkitem.bypass.enchant")) return result;
-		ItemStack hand = player.getItemInHand();
+		ItemStack hand = player.getInventory().getItemInHand();
 		String logs = null;
 		if (hand == null) return result;
 		if (hand.getType() == Material.AIR) return result;
@@ -80,7 +80,7 @@ public class CheckEnchant {
 			result = true;
 			ItemStack itemair = new ItemStack(Material.AIR);
 			event.setCancelled(result);
-			player.setItemInHand(itemair);
+			player.getInventory().setItemInHand(itemair);
 			player.sendMessage(CheckItem.enchantmess);
 			logs = player.getName() + ": " + event.getEventName()
 					+ ": " + hand.toString();
@@ -144,7 +144,7 @@ public class CheckEnchant {
 		if (checkEnchantLevel(item) || checkEnchantAmount(item)) {
 			result = true;
 			item = new ItemStack(Material.AIR);
-			player.setItemInHand(item);
+			player.getInventory().setItemInHand(item);
 			player.sendMessage(CheckItem.enchantmess);
 			event.setCancelled(true);
 			logs = event.getPlayer().getName() + ": " + event.getEventName()

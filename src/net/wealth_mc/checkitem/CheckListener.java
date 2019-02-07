@@ -5,7 +5,9 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.inventory.InventoryAction;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.player.PlayerArmorStandManipulateEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
@@ -57,18 +59,28 @@ public class CheckListener implements Listener {
 		if (CheckItem.enchantcheck) if (CheckEnchant.checkItemClick(event)) ;
 	}
 
-	@EventHandler(priority = EventPriority.LOW)
+	@EventHandler(priority = EventPriority.HIGH)
 	public void onFrameClick (PlayerInteractEntityEvent event) {
 		CheckItemsList.checkFrameInteractEntity(event);
 	}
 
 	@EventHandler(priority = EventPriority.HIGH)
 	public void onCheckInventoryClickEvent(InventoryClickEvent event) {
+/*		CheckItem.instance.getLogger().info("1 " + event.getEventName());
+		CheckItem.instance.getLogger().info("2 " + event.getAction());
+		CheckItem.instance.getLogger().info("1 " + event.isRightClick());
+		CheckItem.instance.getLogger().info("1 " + event.getClick());*/
+		if (event.getInventory().getType() == InventoryType.ANVIL
+				&& event.getAction() == InventoryAction.HOTBAR_SWAP) {
+			event.setCancelled(true);
+		}
 		CheckItemsList.checkAnvilPickup(event);
 		CheckItemsList.checkAnvilPlace(event);
 		CheckItemsList.checkCloneStack(event);
+		CheckItemsList.checkCloneStackR(event);
 		CheckItemsList.checkInventoryClick(event);
 		CheckItemsList.checkCreativeDrop(event);
 	}
-
+	
+		
 }

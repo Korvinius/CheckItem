@@ -74,13 +74,13 @@ public class CheckCommand implements CommandExecutor {
 				String n = null;
 				String l = null;
 
-				if (player.getItemInHand().getType() != Material.AIR) {
-					m = player.getItemInHand().getType().toString();
-					if (player.getItemInHand().getItemMeta().hasDisplayName()) {
-						n = player.getItemInHand().getItemMeta().getDisplayName();
+				if (player.getInventory().getItemInHand().getType() != Material.AIR) {
+					m = player.getInventory().getItemInHand().getType().toString();
+					if (player.getInventory().getItemInHand().getItemMeta().hasDisplayName()) {
+						n = player.getInventory().getItemInHand().getItemMeta().getDisplayName();
 						}
-					if (player.getItemInHand().getItemMeta().hasLore()) {
-						l = player.getItemInHand().getItemMeta().getLore().toString();
+					if (player.getInventory().getItemInHand().getItemMeta().hasLore()) {
+						l = player.getInventory().getItemInHand().getItemMeta().getLore().toString();
 						}
 					
 					
@@ -116,13 +116,13 @@ public class CheckCommand implements CommandExecutor {
 				String l = no;
 				String b = null;
 				int h = 0;
-				if (player.getItemInHand().getType() != Material.AIR) {
-					m = player.getItemInHand().getType().toString();
-					if (player.getItemInHand().getItemMeta().hasDisplayName()) {
-						n = player.getItemInHand().getItemMeta().getDisplayName();
+				if (player.getInventory().getItemInHand().getType() != Material.AIR) {
+					m = player.getInventory().getItemInHand().getType().toString();
+					if (player.getInventory().getItemInHand().getItemMeta().hasDisplayName()) {
+						n = player.getInventory().getItemInHand().getItemMeta().getDisplayName();
 						}
-					if (player.getItemInHand().getItemMeta().hasLore()) {
-						l = player.getItemInHand().getItemMeta().getLore().toString();
+					if (player.getInventory().getItemInHand().getItemMeta().hasLore()) {
+						l = player.getInventory().getItemInHand().getItemMeta().getLore().toString();
 						}
 
 					artefact = m + n + l;

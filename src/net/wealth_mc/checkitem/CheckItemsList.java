@@ -8,7 +8,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.Event.Result;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockPlaceEvent;
-import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryAction;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryType;
@@ -124,15 +123,41 @@ public class CheckItemsList {
 //******* конец проверки чар 2
 		if (!CheckItem.instance.items) return;
 		if (CheckItem.permcheck) if (player.hasPermission("checkitem.bypass.items")) return;
-		if (event.getClick() != ClickType.CREATIVE) return;
-		Artefact artefact = getArtefact(event.getCursor());
+//		if (event.getClick() != ClickType.CREATIVE) return;
+		if (!event.getEventName().equals("InventoryCreativeEvent")) return;
+
+		Artefact artefact = getArtefact(event.getCurrentItem());
+		if (artefact != null) {
+//			artefact = getArtefact(event.getCurrentItem());
+			if (CheckItem.instance.itemsm.contains(artefact)) {
+				player.sendMessage(CheckItem.TAG +  artefact.toString() + ChatColor.DARK_RED
+						+ " нельзя перемещать в инвентаре с включенным творческим режимом!");
+				event.setCancelled(true);
+				closeInventoryPl(player);
+				return;
+			}
+		}
+		
+		if (event.getCursor() != null && event.getCursor().getType() != Material.AIR) {
+			artefact = getArtefact(event.getCursor());
+			if (artefact == null) return;
+			if (CheckItem.instance.itemsm.contains(artefact)) {
+				player.sendMessage(CheckItem.TAG +  artefact.toString() + ChatColor.DARK_RED
+						+ " уничтожается при попытке перемещать в инвентаре с включенным творческим режимом!");
+				event.setCancelled(true);
+				event.setResult(Result.DENY);
+				closeInventoryPl(player);
+			}
+		}
+		
+/*		Artefact artefact = getArtefact(event.getCursor());
 		if (CheckItem.instance.itemsm.contains(artefact)) {
 			player.sendMessage(CheckItem.TAG +  artefact.toString() + ChatColor.DARK_RED
 					+ " уничтожается при попытке перемещать в инвентаре с включенным творческим режимом!");
 			event.setCancelled(true);
 			event.setResult(Result.DENY);
 			closeInventoryPl(player);
-		}
+		}*/
 	}
 
 	/**
@@ -157,6 +182,26 @@ public class CheckItemsList {
 		}
 	}
 
+	public static void checkCloneStackR(InventoryClickEvent event) {
+		if (!CheckItem.instance.items) return;
+		Player player = (Player) event.getWhoClicked();
+		if (CheckItem.permcheck) if (player.hasPermission("checkitem.bypass.items")) return;
+//		InventoryAction action = event.getAction();
+		if (player.getGameMode() == GameMode.CREATIVE
+				&& (event.isRightClick() || event.isLeftClick())) {
+			
+			Artefact artefact = getArtefact(event.getCurrentItem());
+			Artefact artefact2 = getArtefact(event.getCursor());
+			if (CheckItem.instance.itemsm.contains(artefact)
+					||CheckItem.instance.itemsm.contains(artefact2)) {
+				event.setCancelled(true);
+				event.setResult(Result.DENY);
+				closeInventoryPl(player);
+				player.sendMessage(CheckItem.TAG + ChatColor.DARK_RED + " - запрещенное действие в креативе!");
+			}
+		}
+	}
+	
 	/**
 	 * Клики в наковальне place~
 	 * @param event
@@ -221,7 +266,7 @@ public class CheckItemsList {
 		
 		Player  player = event.getPlayer();
 		EntityType ent = event.getRightClicked().getType();
-		ItemStack itemhand = player.getItemInHand(); 
+		ItemStack itemhand = player.getInventory().getItemInHand(); 
 		if (itemhand.getType() == Material.AIR) return;
 		if (ent != EntityType.ITEM_FRAME) return;
 
@@ -230,7 +275,7 @@ public class CheckItemsList {
 			if (CheckItem.permcheck) if (player.hasPermission("checkitem.bypass.enchant")) return;
 			ItemStack itemair = new ItemStack(Material.AIR);
 			event.setCancelled(true);
-			event.getPlayer().setItemInHand(itemair);
+			event.getPlayer().getInventory().setItemInHand(itemair);
 			closeInventoryPl(player);
 			player.sendMessage(CheckItem.enchantmess);
 			CheckItem.instance.getLogger().info(player.getName() + ": " + event.getEventName()
@@ -258,7 +303,7 @@ public class CheckItemsList {
 		Player player = event.getPlayer();
 		GameMode gm = event.getPlayer().getGameMode();
 		Action click = event.getAction();
-		ItemStack hand = player.getItemInHand();
+		ItemStack hand = player.getInventory().getItemInHand();
 		if (hand == null) return;
 		if (hand.getType() == Material.AIR) return;
 
@@ -331,7 +376,7 @@ public class CheckItemsList {
 		String mat = null;
 		String nam = null;
 		String lor = null;
-		
+		if (item == null || item.getType() == Material.AIR) return null;
 		mat = item.getType().toString();
 		if (item.getItemMeta().hasDisplayName()) {
 			nam = item.getItemMeta().getDisplayName().toString();
